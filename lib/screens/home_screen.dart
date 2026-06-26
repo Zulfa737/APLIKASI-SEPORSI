@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/cart_provider.dart';
@@ -11,7 +12,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
     final size = MediaQuery.of(context).size;
-    final isDesktop = size.width > 600;
+    final isDesktop = kIsWeb && size.width > 600;
 
     Widget scaffold = Scaffold(
       backgroundColor: const Color(0xFFFDFDFD),

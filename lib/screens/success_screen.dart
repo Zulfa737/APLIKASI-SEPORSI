@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SuccessScreen extends StatelessWidget {
@@ -7,7 +8,7 @@ class SuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final isDesktop = size.width > 600;
+    final isDesktop = kIsWeb && size.width > 600;
 
     Widget scaffold = Scaffold(
       backgroundColor: const Color(0xFFFDFDFD),

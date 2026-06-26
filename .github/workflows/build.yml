@@ -40,7 +40,7 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: seporsi-apk
+          name: Seporsi-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
       # 2. Buat Release di GitHub (Hanya dijalankan jika pemicunya adalah tag versi v*)
