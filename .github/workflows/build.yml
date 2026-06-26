@@ -2,8 +2,10 @@ name: Build & Release APK
 
 on:
   push:
+    branches:
+      - main # Jalan setiap kali ada push biasa ke branch main
     tags:
-      - 'v*' # Memicu otomatisasi saat Anda melakukan push tag baru seperti v1.0.0
+      - 'v*' # Jalan saat Anda push tag rilis versi seperti v1.0.0
 
 permissions:
   contents: write
@@ -34,7 +36,16 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
 
+      # 1. Selalu simpan APK sebagai Artifact (Bisa diunduh dari halaman Actions untuk push biasa)
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seporsi-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      # 2. Buat Release di GitHub (Hanya dijalankan jika pemicunya adalah tag versi v*)
       - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: build/app/outputs/flutter-apk/app-release.apk
