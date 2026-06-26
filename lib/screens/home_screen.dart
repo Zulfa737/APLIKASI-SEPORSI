@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width > 600;
 
-    return Scaffold(
+    Widget scaffold = Scaffold(
       backgroundColor: const Color(0xFFFDFDFD),
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -88,77 +88,97 @@ class HomeScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Center(
-        child: Container(
-          constraints: BoxConstraints(
-            maxWidth: isDesktop ? 450 : double.infinity,
-          ),
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Discount Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Discount Header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Diskon Spesial Hari Ini',
-                      style: GoogleFonts.outfit(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF8D3030),
-                      ),
-                    ),
-                    const CountdownTimer(),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // Special Discounts Horizontal List
-                SizedBox(
-                  height: 250,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: cartProvider.specialDiscounts.length,
-                    itemBuilder: (context, index) {
-                      final item = cartProvider.specialDiscounts[index];
-                      return _buildSpecialDiscountCard(context, item);
-                    },
-                  ),
-                ),
-                const SizedBox(height: 32),
-
-                // Other Menu Title
                 Text(
-                  'Jelajahi Menu Lainnya',
+                  'Diskon Spesial Hari Ini',
                   style: GoogleFonts.outfit(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: const Color(0xFF8D3030),
                   ),
                 ),
-                const SizedBox(height: 16),
-
-                // Other Menus Vertical List
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: cartProvider.otherMenus.length,
-                  itemBuilder: (context, index) {
-                    final item = cartProvider.otherMenus[index];
-                    return _buildOtherMenuCard(context, item);
-                  },
-                ),
-                const SizedBox(height: 24),
+                const CountdownTimer(),
               ],
             ),
-          ),
+            const SizedBox(height: 16),
+
+            // Special Discounts Horizontal List
+            SizedBox(
+              height: 250,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                itemCount: cartProvider.specialDiscounts.length,
+                itemBuilder: (context, index) {
+                  final item = cartProvider.specialDiscounts[index];
+                  return _buildSpecialDiscountCard(context, item);
+                },
+              ),
+            ),
+            const SizedBox(height: 32),
+
+            // Other Menu Title
+            Text(
+              'Jelajahi Menu Lainnya',
+              style: GoogleFonts.outfit(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF8D3030),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Other Menus Vertical List
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: cartProvider.otherMenus.length,
+              itemBuilder: (context, index) {
+                final item = cartProvider.otherMenus[index];
+                return _buildOtherMenuCard(context, item);
+              },
+            ),
+            const SizedBox(height: 24),
+          ],
         ),
       ),
     );
+
+    if (isDesktop) {
+      return Container(
+        color: const Color(0xFFF3F3F3),
+        child: Center(
+          child: Container(
+            width: 450,
+            height: size.height * 0.95,
+            margin: const EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: scaffold,
+          ),
+        ),
+      );
+    }
+
+    return scaffold;
   }
 
   Widget _buildSpecialDiscountCard(BuildContext context, MenuItem item) {
@@ -171,7 +191,7 @@ class HomeScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -302,7 +322,7 @@ class HomeScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -316,7 +336,7 @@ class HomeScreen extends StatelessWidget {
             child: Container(
               width: 110,
               height: 110,
-              color: const Color(0xFFFFB84D).withOpacity(0.15),
+              color: const Color(0xFFFFB84D).withValues(alpha: 0.15),
               child: Image.asset(
                 item.imageAsset,
                 fit: BoxFit.cover,
@@ -419,7 +439,7 @@ class HomeScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.6),
+          color: Colors.white.withValues(alpha: 0.6),
           shape: BoxShape.circle,
         ),
         child: Icon(

@@ -20,7 +20,7 @@ class _CartScreenState extends State<CartScreen> {
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width > 600;
 
-    return Scaffold(
+    Widget scaffold = Scaffold(
       backgroundColor: const Color(0xFFFDFDFD),
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -42,148 +42,168 @@ class _CartScreenState extends State<CartScreen> {
         ),
         centerTitle: false,
       ),
-      body: Center(
-        child: Container(
-          constraints: BoxConstraints(
-            maxWidth: isDesktop ? 450 : double.infinity,
-          ),
-          child: cartProvider.cartItems.isEmpty
-              ? _buildEmptyCart(context)
-              : Column(
-                  children: [
-                    // Cart List
-                    Expanded(
-                      child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                        itemCount: cartProvider.cartItems.length,
-                        itemBuilder: (context, index) {
-                          final cartItem = cartProvider.cartItems[index];
-                          return _buildCartItemCard(context, cartItem);
-                        },
-                      ),
-                    ),
+      body: cartProvider.cartItems.isEmpty
+          ? _buildEmptyCart(context)
+          : Column(
+              children: [
+                // Cart List
+                Expanded(
+                  child: ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    itemCount: cartProvider.cartItems.length,
+                    itemBuilder: (context, index) {
+                      final cartItem = cartProvider.cartItems[index];
+                      return _buildCartItemCard(context, cartItem);
+                    },
+                  ),
+                ),
 
-                    // Price Summary, Payment, Checkout Button
-                    Container(
-                      padding: const EdgeInsets.all(20.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.06),
-                            blurRadius: 15,
-                            offset: const Offset(0, -5),
-                          ),
-                        ],
+                // Price Summary, Payment, Checkout Button
+                Container(
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.06),
+                        blurRadius: 15,
+                        offset: const Offset(0, -5),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisSize: MainAxisSize.min,
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Subtotal
+                      _buildPriceRow('Subtotal', cartProvider.subtotal),
+                      const SizedBox(height: 8),
+
+                      // Disc. Member
+                      _buildPriceRow(
+                        'Disc. Member',
+                        cartProvider.memberDiscount,
+                        isDiscount: true,
+                      ),
+                      const Divider(height: 24, thickness: 1, color: Color(0xFFF2F2F2)),
+
+                      // Total
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // Subtotal
-                          _buildPriceRow('Subtotal', cartProvider.subtotal),
-                          const SizedBox(height: 8),
-
-                          // Disc. Member
-                          _buildPriceRow(
-                            'Disc. Member',
-                            cartProvider.memberDiscount,
-                            isDiscount: true,
-                          ),
-                          const Divider(height: 24, thickness: 1, color: Color(0xFFF2F2F2)),
-
-                          // Total
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Total',
-                                style: GoogleFonts.outfit(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF333333),
-                                ),
-                              ),
-                              Text(
-                                'Rp. ${(cartProvider.total / 1000).toStringAsFixed(3)}',
-                                style: GoogleFonts.outfit(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF8D3030),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 24),
-
-                          // Metode Pembayaran Label
                           Text(
-                            'Metode Pembayaran',
+                            'Total',
                             style: GoogleFonts.outfit(
-                              fontSize: 14,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: const Color(0xFF333333),
                             ),
                           ),
-                          const SizedBox(height: 12),
-
-                          // Payment selection Row
-                          Row(
-                            children: [
-                              // QRIS
-                              Expanded(
-                                child: _buildPaymentMethodCard(
-                                  id: 'qris',
-                                  child: _buildQrisLogo(),
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              // Cash
-                              Expanded(
-                                child: _buildPaymentMethodCard(
-                                  id: 'cash',
-                                  child: _buildCashLogo(),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 28),
-
-                          // Order Now Button
-                          ElevatedButton(
-                            onPressed: () {
-                              // Perform Checkout
-                              cartProvider.clearCart();
-                              Navigator.pushReplacementNamed(context, '/success');
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF8D3030),
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              elevation: 0,
-                            ),
-                            child: Text(
-                              'Order Now',
-                              style: GoogleFonts.outfit(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          Text(
+                            'Rp. ${(cartProvider.total / 1000).toStringAsFixed(3)}',
+                            style: GoogleFonts.outfit(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF8D3030),
                             ),
                           ),
-                          const SizedBox(height: 8),
                         ],
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 24),
+
+                      // Metode Pembayaran Label
+                      Text(
+                        'Metode Pembayaran',
+                        style: GoogleFonts.outfit(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF333333),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Payment selection Row
+                      Row(
+                        children: [
+                          // QRIS
+                          Expanded(
+                            child: _buildPaymentMethodCard(
+                              id: 'qris',
+                              child: _buildQrisLogo(),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          // Cash
+                          Expanded(
+                            child: _buildPaymentMethodCard(
+                              id: 'cash',
+                              child: _buildCashLogo(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 28),
+
+                      // Order Now Button
+                      ElevatedButton(
+                        onPressed: () {
+                          // Perform Checkout
+                          cartProvider.clearCart();
+                          Navigator.pushReplacementNamed(context, '/success');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF8D3030),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Order Now',
+                          style: GoogleFonts.outfit(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                  ),
                 ),
-        ),
-      ),
+              ],
+            ),
     );
+
+    if (isDesktop) {
+      return Container(
+        color: const Color(0xFFF3F3F3),
+        child: Center(
+          child: Container(
+            width: 450,
+            height: size.height * 0.95,
+            margin: const EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: scaffold,
+          ),
+        ),
+      );
+    }
+
+    return scaffold;
   }
 
   Widget _buildEmptyCart(BuildContext context) {
@@ -251,7 +271,7 @@ class _CartScreenState extends State<CartScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -265,7 +285,7 @@ class _CartScreenState extends State<CartScreen> {
             child: Container(
               width: 80,
               height: 80,
-              color: item.accentColor.withOpacity(0.15),
+              color: item.accentColor.withValues(alpha: 0.15),
               child: Image.asset(
                 item.imageAsset,
                 fit: BoxFit.cover,

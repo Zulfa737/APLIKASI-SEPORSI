@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'providers/cart_provider.dart';
@@ -8,14 +9,22 @@ import 'screens/cart_screen.dart';
 import 'screens/success_screen.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => CartProvider()),
-      ],
-      child: const SeporsiApp(),
-    ),
-  );
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Memaksa orientasi aplikasi hanya untuk potret (portrait)
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => CartProvider()),
+        ],
+        child: const SeporsiApp(),
+      ),
+    );
+  });
 }
 
 class SeporsiApp extends StatelessWidget {

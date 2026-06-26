@@ -31,16 +31,108 @@
 
   <title>SEPORSI</title>
   <link rel="manifest" href="manifest.json">
+
+  <style>
+    body {
+      background-color: #F9F9F9;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    #loading-indicator {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #F9F9F9;
+      z-index: 99999;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    /* Logo Bowl Styling */
+    .logo-wrapper {
+      position: relative;
+      width: 88px;
+      height: 64px;
+      margin-bottom: 16px;
+    }
+    /* Maroon Semicircle Bowl (bottom part) */
+    .logo-bowl {
+      position: absolute;
+      top: 20px;
+      left: 0;
+      width: 88px;
+      height: 44px;
+      background-color: #8D3030;
+      border-bottom-left-radius: 44px;
+      border-bottom-right-radius: 44px;
+    }
+    /* Small circle - Top half (Maroon, above the bowl) */
+    .logo-top {
+      position: absolute;
+      top: 0;
+      left: 24px;
+      width: 40px;
+      height: 20px;
+      background-color: #8D3030;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+    /* Small circle - Bottom half (F9F9F9, cutout inside the bowl) */
+    .logo-cutout {
+      position: absolute;
+      top: 20px;
+      left: 24px;
+      width: 40px;
+      height: 20px;
+      background-color: #F9F9F9;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+    .logo-text {
+      font-size: 32px;
+      font-weight: 900;
+      color: #8D3030;
+      letter-spacing: -1px;
+      margin-bottom: 24px;
+    }
+    /* Modern minimalist spinner */
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #EAEAEA;
+      border-top: 3px solid #8D3030;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-  <!--
-    You can customize the "flutter_bootstrap.js" script.
-    This is useful to provide a custom configuration to the Flutter loader
-    or to give the user feedback during the initialization process.
+  <!-- SEPORSI Custom Splash Loader -->
+  <div id="loading-indicator">
+    <div class="loading-container">
+      <div class="logo-wrapper">
+        <div class="logo-bowl"></div>
+        <div class="logo-top"></div>
+        <div class="logo-cutout"></div>
+      </div>
+      <div class="logo-text">SEPORSI</div>
+      <div class="spinner"></div>
+    </div>
+  </div>
 
-    For more details:
-    * https://docs.flutter.dev/platform-integration/web/initialization
-  -->
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
